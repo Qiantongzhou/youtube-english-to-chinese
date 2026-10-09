@@ -8,6 +8,8 @@ artifacts/
 **/obj/
 **/__pycache__/
 *.user
+# Windows executables (case-insensitive extension)
+*.[eE][xX][eE]
 settings.json
 启动 VideoCN.exe/
-app/
+app/app/
