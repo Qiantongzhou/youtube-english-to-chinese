@@ -10,3 +10,4 @@ artifacts/
 *.user
 settings.json
 启动 VideoCN.exe/
+app/
