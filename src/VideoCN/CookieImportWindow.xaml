@@ -1,0 +1,16 @@
+<Window x:Class="VideoCN.CookieImportWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="粘贴 Edge Cookie 文本" Width="850" Height="610" MinWidth="620" MinHeight="440" WindowStartupLocation="CenterOwner" Background="#F5F6F0" FontFamily="Microsoft YaHei UI">
+ <Grid Margin="24">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Margin="0,0,0,16">
+   <TextBlock Text="粘贴 Cookie，直接用于下载。" FontSize="22" FontWeight="SemiBold"/>
+   <TextBlock Text="在已登录的 YouTube 页面按 F12 → 应用程序（Application）→ Cookies → YouTube，复制整张表格后粘贴。支持制表符分列的文本和 Markdown 表格，可带表头。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" Margin="0,12,0,10"/>
+   <TextBlock Text="列顺序：名称、值、域、路径、过期时间、大小、HttpOnly、Secure。请保留空列。也支持带 &amp;#x9;、Markdown 转义及换行优先级的富文本副本。" FontSize="12" TextWrapping="Wrap" Foreground="{StaticResource Muted}"/>
+  </StackPanel>
+  <TextBox x:Name="RawText" Grid.Row="1" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Top" FontFamily="Consolas" FontSize="12" SpellCheck.IsEnabled="False" MaxLength="4000000"/>
+  <StackPanel Grid.Row="2" Margin="0,14,0,0">
+   <TextBlock x:Name="Feedback" Text="转换结果保存在本机，包含登录凭据；请勿分享。原始粘贴文本不写入运行日志。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" FontSize="12" Margin="0,0,0,14"/>
+   <DockPanel><StackPanel DockPanel.Dock="Left" Orientation="Horizontal"><Button Content="从剪贴板粘贴" Click="Paste_Click" Margin="0,0,10,0"/><Button Content="清空" Click="Clear_Click"/></StackPanel><Button x:Name="ConvertButton" Content="转换并使用" Style="{StaticResource Primary}" HorizontalAlignment="Right" Click="Convert_Click"/></DockPanel>
+  </StackPanel>
+ </Grid>
+</Window>

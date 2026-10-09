@@ -1,0 +1,11 @@
+.runtime/
+tools/
+models/
+output/
+dist/
+artifacts/
+**/bin/
+**/obj/
+**/__pycache__/
+*.user
+settings.json

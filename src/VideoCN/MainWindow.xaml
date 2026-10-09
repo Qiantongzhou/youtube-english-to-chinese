@@ -1,0 +1,160 @@
+<Window x:Class="VideoCN.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VideoCN · 本地视频中文化" Width="1280" Height="1000" MinWidth="1080" MinHeight="740" WindowStartupLocation="CenterScreen" Background="#F5F6F0" Foreground="{StaticResource Ink}" FontFamily="Microsoft YaHei UI" Loaded="Window_Loaded" Closing="Window_Closing">
+ <Grid>
+  <Grid.ColumnDefinitions><ColumnDefinition Width="190"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+  <Border Background="#173C35" Padding="24,30">
+   <DockPanel LastChildFill="True">
+    <StackPanel DockPanel.Dock="Top">
+     <Border Width="42" Height="42" Background="#D9EDB5" CornerRadius="12" HorizontalAlignment="Left" Margin="0,0,0,16"><TextBlock Text="译" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#173C35"/></Border>
+     <TextBlock Text="VideoCN" Foreground="White" FontSize="24" FontWeight="SemiBold"/>
+     <TextBlock Text="让好内容，说中文。" Foreground="#A9C2B6" FontSize="12" Margin="0,8,0,38"/>
+     <Button x:Name="StudioNav" Content="◈   视频工作台" Click="Studio_Click" Background="#30564A" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Margin="0,0,0,10"/>
+     <Button Content="≡   字幕校对" Click="Editor_Click" Background="Transparent" Foreground="#DDE7DF" BorderThickness="0" Margin="0,0,0,10"/>
+     <Button Content="⚙   环境与模型" Click="Environment_Click" Background="Transparent" Foreground="#DDE7DF" BorderThickness="0"/>
+    </StackPanel>
+    <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+     <Border Height="1" Background="#3F5E50" Margin="0,0,0,18"/>
+     <TextBlock Text="LOCAL FIRST" Foreground="#D9EDB5" FontSize="10" FontWeight="Bold"/>
+     <TextBlock Text="识别、翻译、配音&#x0a;均在你的电脑上运行" Foreground="#A9C2B6" FontSize="11" LineHeight="20" Margin="0,10,0,0"/>
+     <TextBlock Text="v0.1 · Windows" Foreground="#719386" FontSize="10" Margin="0,24,0,0"/>
+    </StackPanel>
+   </DockPanel>
+  </Border>
+  <Grid Grid.Column="1" Margin="30,26,30,20">
+   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+   <Grid Margin="0,0,0,20">
+    <Grid.Style><Style TargetType="Grid"><Style.Triggers><DataTrigger Binding="{Binding SelectedIndex, ElementName=Pages}" Value="1"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></Grid.Style>
+    <StackPanel><TextBlock Text="你的视频，换一种语言。" FontSize="27" FontWeight="SemiBold"/><TextBlock Text="从英文原声到中文配音与字幕，在一个工作台完成。" Foreground="{StaticResource Muted}" Margin="0,8,0,0" FontSize="13"/></StackPanel>
+    <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="#E8EFDF" CornerRadius="20" Padding="13,8"><TextBlock Text="●  本地 AI 工作流" Foreground="#3F684F" FontSize="11"/></Border>
+   </Grid>
+   <TabControl x:Name="Pages" Grid.Row="1" BorderThickness="0" Background="Transparent">
+    <TabControl.Resources><Style TargetType="TabItem"><Setter Property="Visibility" Value="Collapsed"/></Style></TabControl.Resources>
+    <TabItem Header="工作台">
+     <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="285"/></Grid.ColumnDefinitions>
+       <StackPanel>
+        <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+         <StackPanel>
+          <TextBlock Text="01   添加视频" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,18"/>
+          <TextBlock Text="YouTube 视频网址，或本地视频文件" Style="{StaticResource Label}"/>
+          <TextBox x:Name="SourceBox" MinHeight="44" ToolTip="粘贴 https://www.youtube.com/watch?v=… 或选择本地 MP4"/>
+          <TextBlock Text="YouTube 登录方式" Style="{StaticResource Label}" Margin="0,14,0,6"/>
+          <ComboBox x:Name="CookieSourceBox" SelectedIndex="0" SelectedValuePath="Tag"><ComboBoxItem Content="不使用登录状态（匿名访问）" Tag="none"/><ComboBoxItem Content="从 Edge 读取登录状态" Tag="edge"/><ComboBoxItem Content="使用 Cookie 文件" Tag="file"/></ComboBox>
+          <WrapPanel Margin="0,10,0,0"><Button x:Name="QuickLoginButton" Content="测试登录" Click="TestLogin_Click" Margin="0,0,10,0"/><Button x:Name="ImportCookiesButton" Content="粘贴 Cookie 文本" Click="ImportCookies_Click" Margin="0,0,10,0"/><Button x:Name="StopEdgeButton" Content="结束 Edge 后台并重试" Click="StopEdge_Click" ToolTip="先关闭 Edge 窗口。点击将结束当前 Windows 会话的 Edge 后台进程，然后重新测试 Cookie 和视频访问。"/></WrapPanel>
+          <WrapPanel Margin="0,12,0,0"><Button Content="粘贴链接" Click="Paste_Click" Margin="0,0,10,0"/><Button Content="导入本地视频" Click="Browse_Click"/><Button x:Name="DownloadButton" Content="仅下载视频" Click="Download_Click" Margin="10,0,0,0"/></WrapPanel>
+          <DockPanel Margin="0,12,0,0"><Button Content="Edge 登录设置" Click="LoginSettings_Click" DockPanel.Dock="Right" Padding="12,6"/><TextBlock x:Name="VideoTitle" Text="支持单条视频 / Shorts · MP4、MKV、MOV、WebM" Foreground="{StaticResource Muted}" FontSize="11" VerticalAlignment="Center" TextWrapping="Wrap"/></DockPanel>
+         </StackPanel>
+        </Border>
+        <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+         <StackPanel x:Name="OptionsPanel">
+          <TextBlock Text="02   制作偏好" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,18"/>
+          <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+           <StackPanel><TextBlock Text="处理质量" Style="{StaticResource Label}"/><ComboBox x:Name="ModeBox" SelectedIndex="1"><ComboBoxItem Content="快速 · 轻量模型" Tag="quick"/><ComboBoxItem Content="高质量 · 推荐 12GB 显存" Tag="quality"/><ComboBoxItem Content="精修 · 增加一轮翻译润色" Tag="polished"/></ComboBox></StackPanel>
+           <StackPanel Grid.Column="2"><TextBlock Text="中文音色" Style="{StaticResource Label}"/>
+            <ComboBox x:Name="VoiceBox" SelectedIndex="0" MaxDropDownHeight="440" SelectionChanged="VoiceChanged">
+             <ComboBoxItem Content="Serena · 温柔自然女声（本地）" Tag="Serena"/>
+             <ComboBoxItem Content="Vivian · 明亮清晰女声（本地）" Tag="Vivian"/>
+             <ComboBoxItem Content="Uncle Fu · 低沉醇厚男声（本地）" Tag="Uncle_Fu"/>
+             <ComboBoxItem Content="Dylan · 青年北京男声（本地）" Tag="Dylan"/>
+             <ComboBoxItem Content="Eric · 活力成都男声（本地）" Tag="Eric"/>
+             <ComboBoxItem Content="Ryan · 动感节奏男声（本地 / 英语原生）" Tag="Ryan"/>
+             <ComboBoxItem Content="Aiden · 阳光美式男声（本地 / 英语原生）" Tag="Aiden"/>
+             <ComboBoxItem Content="Ono Anna · 轻快女声（本地 / 日语原生）" Tag="Ono_Anna"/>
+             <ComboBoxItem Content="Sohee · 温暖女声（本地 / 韩语原生）" Tag="Sohee"/>
+             <ComboBoxItem Content="晓晓 · 普通话女声（微软在线）" Tag="edge:zh-CN-XiaoxiaoNeural"/>
+             <ComboBoxItem Content="晓伊 · 普通话女声（微软在线）" Tag="edge:zh-CN-XiaoyiNeural"/>
+             <ComboBoxItem Content="云希 · 普通话男声（微软在线）" Tag="edge:zh-CN-YunxiNeural"/>
+             <ComboBoxItem Content="云扬 · 普通话男声（微软在线）" Tag="edge:zh-CN-YunyangNeural"/>
+             <ComboBoxItem Content="云健 · 普通话男声（微软在线）" Tag="edge:zh-CN-YunjianNeural"/>
+             <ComboBoxItem Content="云夏 · 普通话男声（微软在线）" Tag="edge:zh-CN-YunxiaNeural"/>
+            </ComboBox>
+           </StackPanel>
+          </Grid>
+          <TextBlock x:Name="VoiceProviderHint" Text="9 种本地音色 + 6 种微软在线音色。在线音色需联网，配音文本会发送给微软服务。" FontSize="11" Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+          <Grid Margin="0,16,0,18"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+           <StackPanel><TextBlock Text="下载画质" Style="{StaticResource Label}"/><ComboBox x:Name="ResolutionBox" SelectedIndex="0"><ComboBoxItem Content="最高可用画质" Tag="best"/><ComboBoxItem Content="最高 1080p" Tag="1080"/><ComboBoxItem Content="最高 720p" Tag="720"/></ComboBox></StackPanel>
+           <StackPanel Grid.Column="2"><TextBlock Text="计算设备" Style="{StaticResource Label}"/><ComboBox x:Name="DeviceBox" SelectedIndex="0"><ComboBoxItem Content="NVIDIA GPU · 配音自动双卡分工" Tag="cuda"/><ComboBoxItem Content="CPU · 速度较慢" Tag="cpu"/></ComboBox></StackPanel>
+          </Grid>
+          <StackPanel Margin="0,0,0,16"><TextBlock Text="配音语气与生成参数（本地音色）" Style="{StaticResource Label}"/><TextBox x:Name="VoiceStyleBox" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="52" MaxHeight="80" VerticalScrollBarVisibility="Auto" ToolTip="告诉模型整条视频应保持的播音风格"/><TextBlock Text="风格提示词" FontSize="10" Foreground="{StaticResource Muted}" Margin="0,3,0,8"/>
+           <CheckBox x:Name="VoiceConsistencyBox" Content="一致性优先（两层极低随机采样）" IsChecked="True" Margin="0,0,0,8" ToolTip="双卡共用风格、生成参数和每句起始种子，使用极低随机采样减少语气变化并避免长句无法结束；取消后可调整温度和 Top-P。"/>
+           <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel><TextBlock Text="随机种子" FontSize="10" Foreground="{StaticResource Muted}"/><TextBox x:Name="VoiceSeedBox" Text="20260915"/></StackPanel>
+            <StackPanel Grid.Column="2"><TextBlock Text="重复惩罚" FontSize="10" Foreground="{StaticResource Muted}"/><Slider x:Name="VoiceRepetitionSlider" Minimum="0.9" Maximum="1.3" Value="1.05" TickFrequency="0.05" IsSnapToTickEnabled="True"/><TextBlock Text="{Binding Value, ElementName=VoiceRepetitionSlider, StringFormat={}{0:F2}}" FontSize="10" HorizontalAlignment="Right"/></StackPanel>
+           </Grid>
+           <Grid Margin="0,8,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <Grid.Style><Style TargetType="Grid"><Style.Triggers><DataTrigger Binding="{Binding IsChecked, ElementName=VoiceConsistencyBox}" Value="True"><Setter Property="IsEnabled" Value="False"/><Setter Property="Opacity" Value="0.5"/></DataTrigger></Style.Triggers></Style></Grid.Style>
+            <StackPanel><TextBlock Text="采样温度" FontSize="10" Foreground="{StaticResource Muted}"/><Slider x:Name="VoiceTemperatureSlider" Minimum="0.1" Maximum="1.2" Value="0.65" TickFrequency="0.05" IsSnapToTickEnabled="True"/><TextBlock Text="{Binding Value, ElementName=VoiceTemperatureSlider, StringFormat={}{0:F2}}" FontSize="10" HorizontalAlignment="Right"/></StackPanel>
+            <StackPanel Grid.Column="2"><TextBlock Text="Top-P" FontSize="10" Foreground="{StaticResource Muted}"/><Slider x:Name="VoiceTopPSlider" Minimum="0.5" Maximum="1" Value="0.9" TickFrequency="0.05" IsSnapToTickEnabled="True"/><TextBlock Text="{Binding Value, ElementName=VoiceTopPSlider, StringFormat={}{0:F2}}" FontSize="10" HorizontalAlignment="Right"/></StackPanel>
+           </Grid><StackPanel Margin="0,10,0,0"><DockPanel><TextBlock Text="统一语速" FontSize="10" Foreground="{StaticResource Muted}"/><TextBlock Text="{Binding Value, ElementName=VoicePlaybackSpeedSlider, StringFormat={}{0:F2}x}" FontSize="10" HorizontalAlignment="Right"/></DockPanel><Slider x:Name="VoicePlaybackSpeedSlider" Minimum="0.75" Maximum="1.5" Value="1" TickFrequency="0.05" IsSnapToTickEnabled="True" ToolTip="统一调整所有中文配音的播放速度，1.00x 为原速"/></StackPanel><TextBlock Text="一致性优先固定使用温度 0.20、Top-P 0.90，并按文字量限制最大生成步数；关闭后才使用上方自定义采样值。统一语速只改变成品播放速度。" FontSize="10" Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+          </StackPanel>
+          <StackPanel Margin="0,0,0,16"><TextBlock Text="目标口播字速（用于翻译字数预算）" Style="{StaticResource Label}"/>
+           <DockPanel><Button Content="−" Click="RateSlower_Click" Padding="12,6" DockPanel.Dock="Left"/><Button Content="＋" Click="RateFaster_Click" Padding="12,6" DockPanel.Dock="Right"/><TextBlock Text="{Binding Value, ElementName=RateSlider, StringFormat={}{0:F1} 字/秒}" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0"/><Slider x:Name="RateSlider" Minimum="2" Maximum="8" Value="4" TickFrequency="0.5" IsSnapToTickEnabled="True" ValueChanged="RateChanged" VerticalAlignment="Center" Margin="10,0"/></DockPanel>
+           <TextBlock Text="按有声时长控制文案字数；生成的配音保持原速，超长部分允许重叠。" FontSize="11" TextWrapping="Wrap" Foreground="{StaticResource Muted}" Margin="0,8,0,0"/>
+          </StackPanel>
+          <WrapPanel Margin="0,0,0,12"><CheckBox x:Name="SentenceAlignmentBox" Content="按中文句末分句，原速配音（允许重叠）" IsChecked="True" Margin="0,0,12,0" VerticalAlignment="Center"/><TextBlock Text="容差" VerticalAlignment="Center" Margin="0,0,8,0"/><ComboBox x:Name="ToleranceBox" SelectedValuePath="Tag" SelectedIndex="4" Width="100"><ComboBoxItem Content="±1 秒" Tag="1"/><ComboBoxItem Content="±1.5 秒" Tag="1.5"/><ComboBoxItem Content="±2 秒" Tag="2"/><ComboBoxItem Content="±3 秒" Tag="3"/><ComboBoxItem Content="±4 秒" Tag="4"/></ComboBox></WrapPanel>
+          <WrapPanel><CheckBox x:Name="DubBox" Content="生成中文配音" IsChecked="True" Margin="0,0,24,12"/><CheckBox x:Name="BackgroundBox" Content="保留背景音乐 / 环境声" IsChecked="True"/></WrapPanel>
+          <WrapPanel><CheckBox x:Name="SubtitleBox" Content="将中文字幕烧录到画面" IsChecked="True" Margin="0,0,24,12"/><CheckBox x:Name="ReviewBox" Content="配音前先校对字幕" IsChecked="True"/></WrapPanel>
+          <StackPanel Margin="0,0,0,12"><DockPanel><TextBlock Text="每轴字幕最大字数" FontSize="10" Foreground="{StaticResource Muted}"/><TextBlock Text="{Binding Value, ElementName=SubtitleLengthSlider, StringFormat={}{0:F0} 字}" HorizontalAlignment="Right" FontSize="10"/></DockPanel><Slider x:Name="SubtitleLengthSlider" Minimum="10" Maximum="40" Value="20" TickFrequency="1" IsSnapToTickEnabled="True" ToolTip="超过此字数时自动切到下一条字幕时间轴，英文单词保持完整"/></StackPanel>
+          <TextBlock Text="配音会替换英文人声；关闭配音时保留原声。SRT / ASS 始终导出。" FontSize="11" Foreground="{StaticResource Muted}" TextWrapping="Wrap"/>
+         </StackPanel>
+        </Border>
+        <Border Style="{StaticResource Card}"><StackPanel>
+         <TextBlock Text="03   保存与开始" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,16"/>
+         <DockPanel><Button DockPanel.Dock="Right" Content="更改" Click="Output_Click" Margin="8,0,0,0"/><TextBox x:Name="OutputBox" IsReadOnly="True" FontSize="12"/></DockPanel>
+         <WrapPanel Margin="0,18,0,0"><Button x:Name="StartButton" Content="开始识别与翻译  →" Style="{StaticResource Primary}" Click="Start_Click" Padding="22,12" Margin="0,0,12,0"/><Button x:Name="OpenProjectButton" Content="打开已有项目" Click="OpenProject_Click"/></WrapPanel>
+        </StackPanel></Border>
+       </StackPanel>
+       <StackPanel Grid.Column="2">
+        <Border Background="#E9EEDC" CornerRadius="14" Padding="22" Margin="0,0,0,16"><StackPanel><TextBlock Text="一条完整的中文化流程" FontSize="16" FontWeight="SemiBold"/><TextBlock Text="下载 → 识别 → 翻译 → 校对&#x0a;配音 → 背景声混音 → 导出" Foreground="#56715D" FontSize="12" LineHeight="24" Margin="0,12,0,0"/><Border Background="#DCE6CB" CornerRadius="6" Padding="10" Margin="0,16,0,0"><TextBlock Text="模型分阶段运行，释放显存后继续。" FontSize="11" Foreground="#44603E" TextWrapping="Wrap"/></Border></StackPanel></Border>
+        <Border Style="{StaticResource Card}"><StackPanel>
+         <TextBlock Text="制作进度" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,20"/>
+         <ItemsControl x:Name="StageList"><ItemsControl.ItemTemplate><DataTemplate><DockPanel Margin="0,0,0,17"><TextBlock Text="{Binding Mark}" Foreground="{StaticResource Accent}" Width="24" FontSize="15"/><TextBlock Text="{Binding Name}" FontSize="12"/></DockPanel></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+         <ProgressBar x:Name="Progress" Minimum="0" Maximum="100" Height="6" Foreground="{StaticResource Accent}" Background="#E6ECE4" BorderThickness="0" Margin="0,8,0,14"/>
+         <TextBlock x:Name="StatusText" Text="准备就绪，添加一个视频开始。" Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap" LineHeight="20"/>
+         <Button x:Name="CancelButton" Content="停止当前处理" IsEnabled="False" Click="Cancel_Click" Margin="0,18,0,0"/>
+         <Button x:Name="ResumeButton" Content="继续未完成项目" IsEnabled="False" Click="Resume_Click" Margin="0,10,0,0"/>
+         <Button Content="打开输出文件夹" Click="OpenFolder_Click" Margin="0,10,0,0"/>
+        </StackPanel></Border>
+        <TextBlock Text="首次使用请先打开「环境与模型」。下载工具和模型需要联网，后续 AI 处理在本地进行。" Foreground="{StaticResource Muted}" FontSize="11" TextWrapping="Wrap" LineHeight="20" Margin="5,16,5,0"/>
+       </StackPanel>
+      </Grid>
+     </ScrollViewer>
+    </TabItem>
+    <TabItem Header="字幕校对">
+     <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+      <DockPanel Margin="0,0,0,10"><StackPanel Orientation="Horizontal" DockPanel.Dock="Right"><Button x:Name="EditorRegenerateAllButton" Content="切换模型并重生成全部语音" Click="RegenerateAllVoices_Click" Margin="0,0,10,0" ToolTip="选择本地语音模型和默认音色，只重新生成已有时间轴的全部语音。"/><Button x:Name="EditorOpenButton" Content="打开以前的项目" Click="OpenProject_Click" Margin="0,0,10,0"/><Button Content="打开项目文件夹" Click="OpenFolder_Click"/></StackPanel><TextBlock Text="字幕与配音编辑" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/></DockPanel>
+      <TabControl x:Name="EditorViews" Grid.Row="1">
+       <TabItem Header="视频与配音时间轴"><ContentControl x:Name="VoiceEditorHost" Margin="0,8,0,0"/></TabItem>
+       <TabItem Header="字幕文字与生成设置">
+     <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <Border Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel><TextBlock Text="把每一句，改得更像中文。" FontSize="21" FontWeight="SemiBold"/><TextBlock Text="语音结束后连续 2 秒没有说话即分段，空挡不计入字数预算。中文配音保持生成原速，超出部分允许重叠并标记；后句不自动顺延，位置和语速由你调整。" Foreground="{StaticResource Muted}" Margin="0,10,0,16" TextWrapping="Wrap"/><StackPanel x:Name="EditorRatePanel" Margin="0,0,0,14"><WrapPanel Margin="0,0,0,10"><CheckBox Content="按中文句末分句，原速配音（允许重叠）" IsChecked="{Binding IsChecked, ElementName=SentenceAlignmentBox, Mode=TwoWay}" Margin="0,0,12,0" VerticalAlignment="Center"/><ComboBox SelectedValuePath="Tag" SelectedValue="{Binding SelectedValue, ElementName=ToleranceBox, Mode=TwoWay}" Width="100"><ComboBoxItem Content="±1 秒" Tag="1"/><ComboBoxItem Content="±1.5 秒" Tag="1.5"/><ComboBoxItem Content="±2 秒" Tag="2"/><ComboBoxItem Content="±3 秒" Tag="3"/><ComboBoxItem Content="±4 秒" Tag="4"/></ComboBox></WrapPanel><WrapPanel VerticalAlignment="Center"><TextBlock Text="每秒字数" VerticalAlignment="Center" Margin="0,0,12,0"/><Button Content="−" Click="RateSlower_Click" Padding="12,6"/><Slider Minimum="2" Maximum="8" Value="{Binding Value, ElementName=RateSlider, Mode=TwoWay}" TickFrequency="0.5" IsSnapToTickEnabled="True" Width="150" VerticalAlignment="Center" Margin="10,0"/><Button Content="＋" Click="RateFaster_Click" Padding="12,6"/><TextBlock Text="{Binding Value, ElementName=RateSlider, StringFormat={}{0:F1} 字/秒}" VerticalAlignment="Center" Margin="12,0"/><Button x:Name="RetimeButton" Content="按此字数调整文案" Click="Retime_Click"/></WrapPanel><DockPanel Margin="0,10,0,0"><TextBlock Text="每轴字幕最大字数" VerticalAlignment="Center" DockPanel.Dock="Left"/><TextBlock Text="{Binding Value, ElementName=SubtitleLengthSlider, StringFormat={}{0:F0} 字}" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="12,0,0,0"/><Slider Minimum="10" Maximum="40" Value="{Binding Value, ElementName=SubtitleLengthSlider, Mode=TwoWay}" TickFrequency="1" IsSnapToTickEnabled="True" Margin="14,0"/></DockPanel><TextBlock Text="调整前自动备份；只改偏多或偏少的句子，保留原意。汉字计 1，英文单词、连续数字各计 1，不计标点。每秒字数只指导文案长度，不会改变生成音频的播放速度。" FontSize="11" TextWrapping="Wrap" Foreground="{StaticResource Muted}" Margin="0,8,0,0"/></StackPanel><WrapPanel><Button x:Name="SaveButton" Content="保存字幕" Click="Save_Click" Margin="0,0,10,0"/><Button x:Name="PreviewButton" Content="播放选中句原声" Click="Preview_Click" Margin="0,0,10,0"/><Button x:Name="ResegmentButton" Content="重建人声分段与翻译" Click="Resegment_Click" Margin="0,0,10,0" ToolTip="重新识别人声段并翻译；原字幕和项目会自动备份。"/><Button x:Name="RenderButton" Content="生成中文视频  →" Style="{StaticResource Primary}" Click="Render_Click"/></WrapPanel></StackPanel></Border>
+      <DataGrid x:Name="SubtitleGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E6EAE2" RowHeaderWidth="0" Background="White" BorderBrush="#E1E6DD" AlternatingRowBackground="#F7F9F3" SelectionMode="Single" SelectionUnit="FullRow" HeadersVisibility="Column" MinRowHeight="54" FontSize="13">
+       <DataGrid.Columns><DataGridTextColumn Header="#" Binding="{Binding Id}" IsReadOnly="True" Width="40"/><DataGridTextColumn Header="开始 / 秒" Binding="{Binding Start, StringFormat=F3, ValidatesOnExceptions=True}" Width="85"/><DataGridTextColumn Header="结束 / 秒" Binding="{Binding End, StringFormat=F3, ValidatesOnExceptions=True}" Width="85"/><DataGridTextColumn Header="配音开始 / 秒" Binding="{Binding AudioStart, ValidatesOnExceptions=True}" Width="105"/><DataGridTextColumn Header="上次配音位置 / 待调整" Binding="{Binding AudioTiming}" IsReadOnly="True" Width="180"><DataGridTextColumn.ElementStyle><Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="Padding" Value="6"/></Style></DataGridTextColumn.ElementStyle></DataGridTextColumn><DataGridTextColumn Header="字数 / 有声时长" Binding="{Binding TextBudget}" IsReadOnly="True" Width="165"/><DataGridTextColumn Header="英文原文" Binding="{Binding En}" IsReadOnly="True" Width="*"><DataGridTextColumn.ElementStyle><Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="Padding" Value="10"/><Setter Property="Foreground" Value="#718079"/></Style></DataGridTextColumn.ElementStyle></DataGridTextColumn><DataGridTextColumn Header="中文配音文案 · 可编辑" Binding="{Binding Zh}" Width="*"><DataGridTextColumn.ElementStyle><Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="Padding" Value="10"/></Style></DataGridTextColumn.ElementStyle></DataGridTextColumn></DataGrid.Columns>
+      </DataGrid>
+      <TextBlock x:Name="EditorHint" Grid.Row="2" Text="识别与翻译完成后，字幕会显示在这里。" Margin="0,14,0,0" Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap"/>
+     </Grid>
+       </TabItem>
+      </TabControl>
+     </Grid>
+    </TabItem>
+    <TabItem Header="环境与模型">
+     <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel>
+      <Border Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel><TextBlock Text="准备你的本地制作环境" FontSize="21" FontWeight="SemiBold"/><TextBlock Text="工具、Python 与模型均保存在程序目录，不修改系统 Python。完整环境和高质量模型需要数十 GB 空间。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" Margin="0,12,0,18"/><WrapPanel><Button x:Name="InstallButton" Content="安装 / 修复完整环境" Click="Install_Click" Style="{StaticResource Primary}" Margin="0,0,12,10"/><Button x:Name="InstallCoreButton" Content="只安装下载工具" Click="InstallCore_Click" Margin="0,0,12,10"/><Button x:Name="CheckButton" Content="检查环境" Click="Check_Click" Margin="0,0,12,10"/><Button x:Name="ModelsButton" Content="下载当前档位模型" Click="Models_Click" Margin="0,0,0,10"/></WrapPanel><TextBox x:Name="EnvironmentText" Text="点击「检查环境」查看工具与 CUDA 状态。" IsReadOnly="True" TextWrapping="Wrap" BorderThickness="0" Background="#F5F7F1" MinHeight="140" Margin="0,10,0,0"/></StackPanel></Border>
+      <Border Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel><TextBlock Text="术语与翻译偏好" FontSize="17" FontWeight="SemiBold"/><TextBlock Text="可选。例：Unity 保留英文；prefab 译为预制体；使用通俗的教程口吻。修改仅对之后的翻译生效。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" FontSize="12" Margin="0,12,0,12"/><TextBox x:Name="GlossaryBox" AcceptsReturn="True" TextWrapping="Wrap" Height="100" VerticalScrollBarVisibility="Auto"/></StackPanel></Border>
+      <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="使用说明" FontSize="17" FontWeight="SemiBold"/><TextBlock Text="• 高质量：Whisper large-v3、Qwen3 14B 量化翻译、Qwen3-TTS 1.7B。&#x0a;• 快速模式使用较小模型；精修模式额外进行一轮中文润色。&#x0a;• 保留背景声使用 Demucs，可能残留少量英文或产生分离伪影。&#x0a;• 中文配音保持生成原速，不自动加速或减速；超长部分允许重叠，可在字幕校对页调整配音开始时间。&#x0a;• 字幕校对完成后可再次导出，已生成且文字未改变的配音会自动复用。&#x0a;• 仅下载你拥有权利或已获授权的内容。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" FontSize="12" LineHeight="25" Margin="0,12,0,0"/></StackPanel></Border>
+      <Border Style="{StaticResource Card}" Margin="0,16,0,0"><StackPanel x:Name="LoginPanel">
+       <TextBlock Text="YouTube 登录状态" FontSize="17" FontWeight="SemiBold"/>
+       <TextBlock Text="选择 Edge 后，下载时由本地下载器读取所选资料的 Cookie，无需导出 Cookie 文件。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" FontSize="12" Margin="0,12,0,12"/>
+       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="登录方式（与工作台同步）" Style="{StaticResource Label}"/><ComboBox x:Name="EnvironmentCookieSourceBox" SelectedValuePath="Tag" SelectedValue="{Binding SelectedValue, ElementName=CookieSourceBox, Mode=TwoWay}"><ComboBoxItem Content="不使用登录状态" Tag="none"/><ComboBoxItem Content="从 Edge 读取登录状态" Tag="edge"/><ComboBoxItem Content="使用 Cookie 文件" Tag="file"/></ComboBox></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="Edge 资料目录（通常为 Default）" Style="{StaticResource Label}"/><ComboBox x:Name="EdgeProfileBox" SelectedIndex="0"><ComboBoxItem Content="Default" Tag="Default"/></ComboBox></StackPanel></Grid>
+       <WrapPanel Margin="0,14,0,0"><Button x:Name="TestLoginButton" Content="测试所选登录方式" Click="TestLogin_Click" Style="{StaticResource Primary}" Margin="0,0,12,0"/><Button Content="结束 Edge 后台并重试" Click="StopEdge_Click" Margin="0,0,12,0"/><Button Content="更新下载器" Click="UpdateDownloader_Click"/></WrapPanel>
+       <TextBlock x:Name="LoginStatusText" Text="测试使用工作台中的视频网址。遇到数据库占用时，请关闭 Edge 后重试；若 Cookie 无法解密，可改用文件方式。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" FontSize="12" Margin="0,14,0,14"/>
+       <TextBlock Text="备用 Cookie 文件（Netscape 格式）" Style="{StaticResource Label}"/><TextBox x:Name="CookiesBox" IsReadOnly="True" FontSize="12"/>
+       <WrapPanel Margin="0,12,0,0"><Button Content="粘贴 Cookie 文本" Click="ImportCookies_Click" Margin="0,0,12,0"/><Button Content="选择 Cookie 文件" Click="Cookies_Click" Margin="0,0,12,0"/><Button Content="清除" Click="ClearCookies_Click"/></WrapPanel>
+      </StackPanel></Border>
+     </StackPanel></ScrollViewer>
+    </TabItem>
+   </TabControl>
+   <StackPanel Grid.Row="2" Margin="0,12,0,0"><DockPanel Margin="0,0,0,8"><Button Content="停止" Click="Cancel_Click" IsEnabled="{Binding IsEnabled, ElementName=CancelButton}" DockPanel.Dock="Right" Padding="12,5"/><TextBlock Text="{Binding Text, ElementName=StatusText}" Foreground="{StaticResource Muted}" FontSize="11" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,14,0"/></DockPanel><Expander x:Name="LogPanel" Header="运行日志与错误详情" FontSize="11" Foreground="{StaticResource Muted}"><TextBox x:Name="LogBox" IsReadOnly="True" AcceptsReturn="True" Height="145" FontFamily="Consolas" FontSize="11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#EDF0E7"/></Expander></StackPanel>
+  </Grid>
+ </Grid>
+</Window>
